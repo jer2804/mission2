@@ -1,19 +1,27 @@
 // ----- HTML ELEMENTS -----
 
+// Gets all ten recommendation cards
 const cards = document.querySelectorAll(".card");
+
+// Gets the popup and the elements inside it
 const popup = document.getElementById("popup");
 const popupImage = document.getElementById("popupImage");
 const popupTitle = document.getElementById("popupTitle");
 const popupDescription = document.getElementById("popupDescription");
+
+// Gets the buttons and trailer link
 const closePopup = document.getElementById("closePopup");
 const trailerLink = document.getElementById("trailerLink");
 const previousCard = document.getElementById("previousCard");
 const nextCard = document.getElementById("nextCard");
 
+// Keeps track of which card is currently open
 let currentCard = 0;
 
 // ----- ANIME TRAILERS -----
 
+// Stores the YouTube links for the five anime
+// Each link is in order of the anime cards
 const trailers = [
   "https://www.youtube.com/results?search_query=Re+Zero+official+trailer",
   "https://www.youtube.com/results?search_query=Mushoku+Tensei+official+trailer",
@@ -23,6 +31,10 @@ const trailers = [
 ];
 
 // ----- STORY DETAILS -----
+
+// Extra information for all ten cards
+// Each object contains the genre, story and main characters
+// The order matches the cards in HTML
 
 const storyDetails = [
   {
@@ -93,31 +105,41 @@ const storyDetails = [
 // ----- OPEN POPUP -----
 
 function openPopup(card) {
+  // Gets the image, title and paragraphs from the clicked card
   const image = card.querySelector("img");
   const title = card.querySelector("h3");
   const paragraphs = card.querySelectorAll("p");
 
+  // Finds which card was clicked and remembers its position
   const cardNumber = Array.from(cards).indexOf(card);
   currentCard = cardNumber;
 
+  // ----- CARD INFORMATION -----
+
+  // Copies the card's image and title into the popup
   popupImage.src = image.src;
   popupImage.alt = image.alt;
   popupTitle.textContent = title.textContent;
 
   // ----- PERSONAL DESCRIPTION -----
 
+  // Clears the previous description before adding a new one
   popupDescription.innerHTML = "";
 
+  // Copies each paragraph from the clicked card into the popup
   paragraphs.forEach(function (paragraph) {
     popupDescription.innerHTML += paragraph.outerHTML;
   });
 
   // ----- EXTRA STORY INFORMATION -----
 
+  // Gets the matching story information from the array
   const story = storyDetails[cardNumber];
 
+  // Finds the HTML section where the extra details will appear
   const details = document.getElementById("storyDetails");
 
+  // Displays the genre, story and characters inside the popup
   details.innerHTML =
     "<p><strong>Genres:</strong> " +
     story.genre +
@@ -130,7 +152,7 @@ function openPopup(card) {
     "</p>";
 
   // ----- ANIME TRAILERS -----
-
+  // Shows the trailer link for anime and hides it for manhwa
   if (cardNumber < 5) {
     trailerLink.href = trailers[cardNumber];
     trailerLink.classList.remove("hidden");
@@ -138,12 +160,16 @@ function openPopup(card) {
     trailerLink.classList.add("hidden");
   }
 
+  // ----- DISPLAY POPUP -----
+  // Removes the hidden class so the popup becomes visible
   popup.classList.remove("hidden");
 }
 
 // ----- CARD CLICK EVENTS -----
 
+// Goes through all ten cards and gives each one a click event
 cards.forEach(function (card) {
+  // Opens the popup when a card is clicked
   card.addEventListener("click", function () {
     openPopup(card);
   });
@@ -151,11 +177,14 @@ cards.forEach(function (card) {
 
 // ----- CLOSE POPUP -----
 
+// Closes the popup when the X button is clicked
 closePopup.addEventListener("click", function () {
   popup.classList.add("hidden");
 });
 
+// Closes the popup when clicking the dark background
 popup.addEventListener("click", function (event) {
+  // Checks that the background was clicked, not the content
   if (event.target === popup) {
     popup.classList.add("hidden");
   }
@@ -163,13 +192,17 @@ popup.addEventListener("click", function (event) {
 
 // ----- PREVIOUS AND NEXT BUTTONS -----
 
+// Opens the previous card
 previousCard.addEventListener("click", function () {
+  // Stops the button from going before the first card
   if (currentCard > 0) {
     openPopup(cards[currentCard - 1]);
   }
 });
 
+// Opens the next card
 nextCard.addEventListener("click", function () {
+  // Stops the button from going past the last card
   if (currentCard < cards.length - 1) {
     openPopup(cards[currentCard + 1]);
   }
